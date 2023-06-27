@@ -373,16 +373,39 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			session$sendCustomMessage(qq("@{heatmap_id}_remove_brush"), "")
 		}, width = width, height = height, res = res)
+	})
 
-		# TEST PACHA
+	# 3rd try
+	shiny_env$obs[[heatmap_id]][[qq("@{heatmap_id}_heatmap_resize")]] = observeEvent(input[[qq("@{heatmap_id}_heatmap_resize")]], {
+
+		req(heatmap_initialized())
+
+		width = input[[qq("@{heatmap_id}_heatmap_input_width")]]
+	    height = input[[qq("@{heatmap_id}_heatmap_input_height")]]
+
 		output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+			
 			if(is.null( selected() )) {
 				grid.newpage()
 				grid.text("No area on the heatmap is selected.", 0.5, 0.5, gp = gpar(fontsize = 14))
-	    	} else {
-	    		sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
+			} else {
+				sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
 			}
 		}, width = width, height = height, res = res)
+	
+		if(do_default_brush_action) {
+			default_brush_action(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list())
+		}
+
+		if(!is.null(brush_action)) {
+			if(identical(brush_action, default_brush_action)) {
+				default_brush_action(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list())
+			} else {
+				brush_action2(selected(), input, output, session)
+			}
+		}
+
+		session$sendCustomMessage(qq("@{heatmap_id}_sub_initialized"), "on")
 	})
 
 	###############################################################
