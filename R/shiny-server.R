@@ -1594,8 +1594,10 @@ default_brush_action = function(input, output, session, heatmap_id,
   output[[qq("@{heatmap_id}_info")]] = renderUI({
     
     if(is.null(selected)) {
-      HTML(qq("<p>@{default_text}</p>"))
+    #   HTML(qq("<p>@{default_text}</p>"))
+		HTML("<p></p>")
     } else {
+		return(HTML("<p></p>"))
       
       selected = selected[!is.na(selected$row_slice), ]
       
@@ -1660,12 +1662,14 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 	output[[qq("@{heatmap_id}_info")]] = renderUI({
 
 	    if(is.null(selected)) {
-	    	HTML("<p>No cell is selected.</p>")
+	    	# HTML("<p>No cell is selected.</p>")
+			HTML("<p></p>")
 	    } else {
 	    	pos = selected
 
 			if(is.null(pos)) {
-				HTML("<p>You did not @{action} inside the heatmap.</p>")
+				# HTML("<p>You did not @{action} inside the heatmap.</p>")
+				HTML("<p></p>")
 			} else {
 				ht_name = pos[1, "heatmap"]
 				slice_name = pos[1, "slice"]
