@@ -17,7 +17,7 @@ ui = fluidPage(
         width1 = 690, height1 = 500,
         width2 = 290, height2 = 500,
         containment = TRUE,
-        output_ui_float = TRUE,
+        output_ui_float = FALSE, layout="1-3", title3=NULL, closable_output = FALSE,
         add_spinner = TRUE)
 )
 
