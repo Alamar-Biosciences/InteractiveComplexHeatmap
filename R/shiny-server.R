@@ -363,6 +363,8 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 		width = input[[qq("@{heatmap_id}_heatmap_resize_width")]]
 	    height = input[[qq("@{heatmap_id}_heatmap_resize_height")]]
 
+		message("Heatmap resized: H=", height, "px, W=", width, "px")
+
 		output[[qq("@{heatmap_id}_heatmap")]] = renderPlot({
 
 	    	draw(ht_list())
@@ -1002,6 +1004,8 @@ make_sub_heatmap = function(input, output, session, heatmap_id, update_size = TR
 
 	width = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_width")]]
     height = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]]
+
+	message("Make sub: H=", height, "px, W=", width, "px")
 
 	show_row_names = input[[qq("@{heatmap_id}_show_row_names_checkbox")]]
 	show_column_names = input[[qq("@{heatmap_id}_show_column_names_checkbox")]]
