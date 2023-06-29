@@ -39,6 +39,21 @@ $(function() {
 				$('#@{heatmap_id}_sub_heatmap_download_image_width').val(ui.size.width - 4);
 				$('#@{heatmap_id}_sub_heatmap_download_image_height').val(ui.size.height - 4);
 			}
+
+			// main heatmap height is kept the same
+			$("#@{heatmap_id}_mask").height(ui.size.height);
+			$("#@{heatmap_id}_heatmap").height(ui.size.height - 4);
+			$("#@{heatmap_id}_heatmap img").height(ui.size.height - 4);
+			$('#@{heatmap_id}_heatmap_input_height').val(ui.size.height - 4);
+			$("#@{heatmap_id}_heatmap_resize").height(ui.size.height - 4);
+
+			// main heatmap width is changed so that sum stays same
+			// $("#@{heatmap_id}_mask").width(690 - ui.size.width);
+			// $("#@{heatmap_id}_heatmap").width(690 - ui.size.width - 4);
+			// $("#@{heatmap_id}_heatmap img").width(690 - ui.size.width - 4);
+			// $('#@{heatmap_id}_heatmap_input_width').val(690 - ui.size.width - 4);
+			// $("#@{heatmap_id}_heatmap_resize").width(690 - ui.size.width - 4);
+
 		},
 		zIndex: 0,
 		containment: @{containment}
