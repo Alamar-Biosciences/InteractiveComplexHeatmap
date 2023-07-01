@@ -275,7 +275,8 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			if(do_default_click_action || do_default_brush_action) {
 				output[[qq("@{heatmap_id}_info")]] = renderUI({
-					HTML("<p>No position is selected.</p>")
+					# HTML("<p>No position is selected.</p>")
+					HTML("<p></p>")
 				})
 			}
 
@@ -348,7 +349,8 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 		if(do_default_click_action || do_default_brush_action) {
 			output[[qq("@{heatmap_id}_info")]] = renderUI({
-				HTML("<p>No position is selected.</p>")
+				# HTML("<p>No position is selected.</p>")
+				HTML("<p></p>")
 			})
 		}
 	}, once = TRUE)
@@ -1591,6 +1593,9 @@ default_brush_action = function(input, output, session, heatmap_id,
 	default_text = "Selected area should overlap to heatmap bodies.",
 	selected = NULL, ht_list = NULL) {
 
+  shinyjs::hideElement(id = qq("@{heatmap_id}_info"))
+  shinyjs::showElement(id = qq("@{heatmap_id}_sub_heatmap_resize"))
+
   output[[qq("@{heatmap_id}_info")]] = renderUI({
     
     if(is.null(selected)) {
@@ -1659,6 +1664,10 @@ default_brush_action = function(input, output, session, heatmap_id,
 }
 
 default_click_action = function(input, output, session, heatmap_id, selected = NULL, ht_list = NULL, action = "click") {
+
+	shinyjs::hideElement(id = qq("@{heatmap_id}_sub_heatmap_resize"))
+	shinyjs::showElement(id = qq("@{heatmap_id}_info"))
+
 	output[[qq("@{heatmap_id}_info")]] = renderUI({
 
 	    if(is.null(selected)) {
