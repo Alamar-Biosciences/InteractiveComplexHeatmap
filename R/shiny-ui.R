@@ -200,6 +200,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	}
 	
 	tagList(
+	  shinyjs::useShinyjs(),
 	  div(
 	    class = qq("@{heatmap_id}_widget"),
 	    tl, 
