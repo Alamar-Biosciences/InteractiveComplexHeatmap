@@ -275,7 +275,8 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			if(do_default_click_action || do_default_brush_action) {
 				output[[qq("@{heatmap_id}_info")]] = renderUI({
-					HTML("<p>No position is selected.</p>")
+					# HTML("<p>No position is selected.</p>")
+					HTML("<p></p>")
 				})
 			}
 
@@ -348,7 +349,8 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 		if(do_default_click_action || do_default_brush_action) {
 			output[[qq("@{heatmap_id}_info")]] = renderUI({
-				HTML("<p>No position is selected.</p>")
+				# HTML("<p>No position is selected.</p>")
+				HTML("<p></p>")
 			})
 		}
 	}, once = TRUE)
@@ -362,6 +364,8 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 		width = input[[qq("@{heatmap_id}_heatmap_resize_width")]]
 	    height = input[[qq("@{heatmap_id}_heatmap_resize_height")]]
+
+		message("Heatmap resized: H=", height, "px, W=", width, "px")
 
 		output[[qq("@{heatmap_id}_heatmap")]] = renderPlot({
 
@@ -1003,6 +1007,8 @@ make_sub_heatmap = function(input, output, session, heatmap_id, update_size = TR
 	width = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_width")]]
     height = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]]
 
+	message("Make sub: H=", height, "px, W=", width, "px")
+
 	show_row_names = input[[qq("@{heatmap_id}_show_row_names_checkbox")]]
 	show_column_names = input[[qq("@{heatmap_id}_show_column_names_checkbox")]]
 	show_annotation = input[[qq("@{heatmap_id}_show_annotation_checkbox")]]
@@ -1587,11 +1593,16 @@ default_brush_action = function(input, output, session, heatmap_id,
 	default_text = "Selected area should overlap to heatmap bodies.",
 	selected = NULL, ht_list = NULL) {
 
+  shinyjs::hideElement(id = qq("@{heatmap_id}_info"))
+  shinyjs::showElement(id = qq("@{heatmap_id}_sub_heatmap_resize"))
+
   output[[qq("@{heatmap_id}_info")]] = renderUI({
     
     if(is.null(selected)) {
-      HTML(qq("<p>@{default_text}</p>"))
+    #   HTML(qq("<p>@{default_text}</p>"))
+		HTML("<p></p>")
     } else {
+		return(HTML("<p></p>"))
       
       selected = selected[!is.na(selected$row_slice), ]
       
@@ -1653,15 +1664,21 @@ default_brush_action = function(input, output, session, heatmap_id,
 }
 
 default_click_action = function(input, output, session, heatmap_id, selected = NULL, ht_list = NULL, action = "click") {
+
+	shinyjs::hideElement(id = qq("@{heatmap_id}_sub_heatmap_resize"))
+	shinyjs::showElement(id = qq("@{heatmap_id}_info"))
+
 	output[[qq("@{heatmap_id}_info")]] = renderUI({
 
 	    if(is.null(selected)) {
-	    	HTML("<p>No cell is selected.</p>")
+	    	# HTML("<p>No cell is selected.</p>")
+			HTML("<p></p>")
 	    } else {
 	    	pos = selected
 
 			if(is.null(pos)) {
-				HTML("<p>You did not @{action} inside the heatmap.</p>")
+				# HTML("<p>You did not @{action} inside the heatmap.</p>")
+				HTML("<p></p>")
 			} else {
 				ht_name = pos[1, "heatmap"]
 				slice_name = pos[1, "slice"]

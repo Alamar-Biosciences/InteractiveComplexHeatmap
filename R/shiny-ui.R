@@ -200,6 +200,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	}
 	
 	tagList(
+	  shinyjs::useShinyjs(),
 	  div(
 	    class = qq("@{heatmap_id}_widget"),
 	    tl, 
@@ -419,6 +420,8 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 	layout = shiny_env$heatmap[[heatmap_id]]$layout
 	if(is.null(layout)) layout = ""
 
+	message("Original heatmap: H=", height, "px, W=", width, "px")
+
 	heatmap_hash = paste0("c", digest(heatmap_id, "crc32"))
     main_heatmap_ui = div(id = qq("@{heatmap_id}_heatmap_group"),
 
@@ -433,6 +436,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
     	# htmlOutput(qq("@{heatmap_id}_warning")),
 
 		if(identical(title, NULL) || identical(title, "")) NULL else h5(title),
+
 
 		div(id = qq("@{heatmap_id}_heatmap_resize"),
 		  if(add_spinner) {
