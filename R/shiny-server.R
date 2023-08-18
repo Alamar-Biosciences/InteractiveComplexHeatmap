@@ -252,6 +252,14 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 	sub_ht_list = reactiveVal(NULL)
 
+	# register original width and height from the div
+	ht_width = reactiveVal(NULL)
+	ht_height = reactiveVal(NULL)
+	observe({
+		isolate(ht_width(session$clientData[[qq("output_@{heatmap_id}_heatmap_width")]]))
+		isolate(ht_height(session$clientData[[qq("output_@{heatmap_id}_heatmap_height")]]))
+	})
+
 	session$sendCustomMessage(qq("@{heatmap_id}_reset_ui"), "")
 
 	###############################################################
@@ -365,9 +373,28 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 		width = input[[qq("@{heatmap_id}_heatmap_resize_width")]]
 	    height = input[[qq("@{heatmap_id}_heatmap_resize_height")]]
 
-		message("Heatmap resized: H=", height, "px, W=", width, "px")
+		scale_width <- width / ht_width()
+		scale_height <- height / ht_height()
+		ht_width(width)
+		ht_height(height)
+
+		message("Heatmap resized: H=", height, "px (", round(scale_height, 2), "x), W=", width, "px (", round(scale_width, 2), "x)")
+
+		# print(ht_list()@ht_list[[1]]@row_names_param$gp$fontsize)
+		# print(ht_list()@ht_list[[1]]@column_names_param$gp$fontsize)
+		htl <- ht_list()
+		# font size is proportionally reset but can't be less than 5
+		htl@ht_list[[1]]@row_names_param$gp$fontsize <- round(
+			pmax(5, htl@ht_list[[1]]@row_names_param$gp$fontsize * scale_height), 1)
+		htl@ht_list[[1]]@column_names_param$gp$fontsize <- round(
+			pmax(5, htl@ht_list[[1]]@column_names_param$gp$fontsize * scale_width), 1)
+		# there is an issue with the redrawing of the column labels (in the bottom)
+		ht_list(draw(htl@ht_list[[1]] + NULL))
 
 		output[[qq("@{heatmap_id}_heatmap")]] = renderPlot({
+
+			# print(ht_list()@ht_list[[1]]@row_names_param$gp$fontsize)
+			# print(ht_list()@ht_list[[1]]@column_names_param$gp$fontsize)
 
 	    	draw(ht_list())
 
@@ -1735,8 +1762,8 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 <p>Details:</p>
 <pre>
 Target:     @{row_label}
-Sample:  @{column_label}
-Value:         @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
+Sample:     @{column_label}
+Value:      @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
 Gene Name:
 UniprotID:
 </pre>")
