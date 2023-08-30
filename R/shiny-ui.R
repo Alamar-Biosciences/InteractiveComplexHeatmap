@@ -474,7 +474,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 						),
 						p("Search Heatmap", style = "display:none;")
 					),
-					tabPanel(HTML("<i class='fa fa-brush'></i>"),
+					hidden(tabPanel(HTML("<i class='fa none'></i>"),
 					         div(
 					           id = qq('@{heatmap_id}_tabs-brush'),
 					           HTML(qq('
@@ -497,8 +497,8 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 									}"))),
 					           sliderInput(qq("@{heatmap_id}_color_pickers_opacity"), label = "Opacity", min = 0, max = 1, value = pickr_opacity)
 					         )
-					),
-					tabPanel(HTML("<i class='fa fa-images'></i>"),
+					)),
+					hidden(tabPanel(HTML("<i class='fa none'></i>"),
 						div(
 							id = qq('@{heatmap_id}_tabs-save-image'),
 							radioButtons(qq("@{heatmap_id}_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
@@ -506,7 +506,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 							numericInput(qq("@{heatmap_id}_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
 							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
 						)
-					),
+					)),
 					id = qq("@{heatmap_id}_heatmap_main_tabsets")
 				)
 				if(!has_brush_response & !only_brush_output_response) { # only click
