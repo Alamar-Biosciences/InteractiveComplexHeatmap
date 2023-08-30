@@ -343,7 +343,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 		output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 			grid.newpage()
-			grid.text("No area on the heatmap is selected.", 0.5, 0.5, gp = gpar(fontsize = 14))
+			grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
 
 		}, res = res)
 
@@ -467,7 +467,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				
 	    		if(is.null( selected() )) {
 	    			grid.newpage()
-					grid.text("No area on the heatmap is selected.", 0.5, 0.5, gp = gpar(fontsize = 14))
+					grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
 	    		} else {
 	    			sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
 				}
@@ -571,7 +571,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				
 	    		if(is.null( selected() )) {
 	    			grid.newpage()
-					grid.text("No area on the heatmap is selected.", 0.5, 0.5, gp = gpar(fontsize = 14))
+					grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
 	    		} else {
 	    			sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
 				}
@@ -751,7 +751,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 				if(is.null(selected())) {
 	    			grid.newpage()
-					grid.text("No area on the heatmap is selected.", 0.5, 0.5, gp = gpar(fontsize = 14))
+					grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
 	    		} else {
 	    			make_sub_heatmap(input, output, session, heatmap_id, update_size = FALSE, selected = selected(), ht_list = ht_list())
 				}
@@ -902,7 +902,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 				grid.newpage()
-				grid.text("No area on the heatmap is selected.", 0.5, 0.5, gp = gpar(fontsize = 14))
+				grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
 			}, res = res)
 
 			output[[qq("@{heatmap_id}_sub_heatmap_control")]] = renderUI({
