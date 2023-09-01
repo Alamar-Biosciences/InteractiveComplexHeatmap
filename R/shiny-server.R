@@ -383,11 +383,12 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 		# print(ht_list()@ht_list[[1]]@row_names_param$gp$fontsize)
 		# print(ht_list()@ht_list[[1]]@column_names_param$gp$fontsize)
 		htl <- ht_list()
-		# font size is proportionally reset but can't be less than 5
+		# font size is proportionally reset but can't be less than fsmin
+		fsmin <- 1
 		htl@ht_list[[1]]@row_names_param$gp$fontsize <- round(
-			pmax(5, htl@ht_list[[1]]@row_names_param$gp$fontsize * scale_height), 1)
+			pmax(fsmin, htl@ht_list[[1]]@row_names_param$gp$fontsize * scale_height), 1)
 		htl@ht_list[[1]]@column_names_param$gp$fontsize <- round(
-			pmax(5, htl@ht_list[[1]]@column_names_param$gp$fontsize * scale_width), 1)
+			pmax(fsmin, htl@ht_list[[1]]@column_names_param$gp$fontsize * scale_width), 1)
 		# there is an issue with the redrawing of the column labels (in the bottom)
 		ht_list(draw(htl@ht_list[[1]] + NULL))
 
