@@ -1737,8 +1737,8 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 Target:     @{row_label}
 Sample:  @{column_label}
 Value:         @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
-Gene Name:
-UniprotID:
+<!--Gene Name:
+UniprotID:-->
 </pre>")
 
 				value_txt = NULL
