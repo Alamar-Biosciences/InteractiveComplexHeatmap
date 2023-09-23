@@ -1966,6 +1966,10 @@ record_observation = function(obs, heatmap_id = shiny_env$current_heatmap_id) {
 make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_size = TRUE, 
 	selected = NULL, ht_list = NULL, ...) {
 
+	# message("SUBHEATMAP SELECTED()")
+	# str(selected(),3)
+	# message("SUBHEATMAP HT_LIST()")
+	# str(ht_list(),3)
 	if(is.null( selected() ))
 		return(NULL)
 
@@ -2002,7 +2006,7 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 .make_plotly_sub_heatmap <- function(ht_list, selected) {
 	.r <- rev(selected()@listData$row_label@unlistData) # target
 	.c <- selected()@listData$column_label@unlistData # sample
-	.m_full <- ht_list()@ht_list$mat@matrix
+	.m_full <- ht_list()@ht_list[[1]]@matrix
 	.m <- .m_full[.r,.c] # value
 	.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
 	dim(.i) <- dim(.m)
