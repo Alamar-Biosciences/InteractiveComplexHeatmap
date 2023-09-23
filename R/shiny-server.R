@@ -41,7 +41,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 	heatmap_id = shiny_env$current_heatmap_id,
 	click_action = NULL, hover_action = NULL, 
 	dblclick_action = NULL, brush_action = NULL, res = 72,
-	show_cell_fun = TRUE, show_layer_fun = TRUE) {
+	show_cell_fun = TRUE, show_layer_fun = TRUE, plotly = FALSE) {
 
 	if(shiny_env$heatmap[[heatmap_id]]$action == "hover") {
 		if(!is.null(hover_action)) click_action = hover_action
@@ -341,11 +341,19 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 		    heatmap_initialized(TRUE)
 		}, res = res)
 
-		output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
-			grid.newpage()
-			grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
 
-		}, res = res)
+		message("(0)")
+		if (plotly) {
+			output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
+				NULL
+			})
+		} else {
+			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+				grid.newpage()
+				grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
+			}, res = res)
+		}
+
 
 		if(do_default_click_action || do_default_brush_action) {
 			output[[qq("@{heatmap_id}_info")]] = renderUI({
@@ -463,15 +471,23 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			updateTextInput(session, qq("@{heatmap_id}_keyword"), value = "")
 
-			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
-				
-	    		if(is.null( selected() )) {
-	    			grid.newpage()
-					grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
-	    		} else {
-	    			sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
-				}
-			}, res = res)
+			message("(1)")
+			if (plotly) {
+				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
+					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
+				})
+			} else {
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+					
+					if(is.null( selected() )) {
+						grid.newpage()
+						grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
+					} else {
+						sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
+					}
+				}, res = res)
+			}
 		
 			if(do_default_brush_action) {
 				default_brush_action(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list())
@@ -499,15 +515,23 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			selected(new_selected)
 
-			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
-				
-	    		if(nrow( selected() ) == 0) {
-	    			grid.newpage()
-					grid.text("No row/column is left.\nPlease change to a smaller number to remove.", 0.5, 0.5, gp = gpar(fontsize = 14))
-	    		} else {
-	    			sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
-				}
-			}, res = res)
+			message("(2)")
+			if (plotly) {
+				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
+					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
+				})
+			} else {
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+					
+					if(nrow( selected() ) == 0) {
+						grid.newpage()
+						grid.text("No row/column is left.\nPlease change to a smaller number to remove.", 0.5, 0.5, gp = gpar(fontsize = 14))
+					} else {
+						sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
+					}
+				}, res = res)
+			}
 		
 			if(do_default_brush_action) {
 				default_brush_action(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list())
@@ -536,15 +560,23 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				selected( selected_copy() )
 			}
 			
-			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
-				
-	    		if(nrow( selected() ) == 0) {
-	    			grid.newpage()
-					grid.text("All empty rows/columns are removed.", 0.5, 0.5, gp = gpar(fontsize = 14))
-	    		} else {
-	    			sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
-				}
-			}, res = res)
+			message("(3)")
+			if (plotly) {
+				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
+					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
+				})
+			} else {
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+					
+					if(nrow( selected() ) == 0) {
+						grid.newpage()
+						grid.text("All empty rows/columns are removed.", 0.5, 0.5, gp = gpar(fontsize = 14))
+					} else {
+						sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
+					}
+				}, res = res)
+			}
 		
 			if(do_default_brush_action) {
 				default_brush_action(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list())
@@ -567,15 +599,23 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			selected( selected_copy() )
 
-			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
-				
-	    		if(is.null( selected() )) {
-	    			grid.newpage()
-					grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
-	    		} else {
-	    			sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
-				}
-			}, res = res)
+			message("(4)")
+			if (plotly) {
+				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
+					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
+				})
+			} else {
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+					
+					if(is.null( selected() )) {
+						grid.newpage()
+						grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
+					} else {
+						sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
+					}
+				}, res = res)
+			}
 		
 			if(do_default_brush_action) {
 				default_brush_action(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list())
@@ -672,24 +712,32 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			}
 			selected_copy( selected() )
 
-			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
-				
-	    		if(is.null(selected())) {
-	    			grid.newpage()
-					grid.text(paste(strwrap(qq("Found nothing from heatmaps with keywords '@{keywords2}'."), width = 60), collapse = "\n"), 0.5, 0.5, gp = gpar(fontsize = 14, col = "red"))
+			message("(5)")
+			if (plotly) {
+				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
+					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
+				})
+			} else {
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+					
+					if(is.null(selected())) {
+						grid.newpage()
+						grid.text(paste(strwrap(qq("Found nothing from heatmaps with keywords '@{keywords2}'."), width = 60), collapse = "\n"), 0.5, 0.5, gp = gpar(fontsize = 14, col = "red"))
 
-					if(do_default_brush_action) {
-						default_brush_action(input, output, session, heatmap_id, qq("Found nothing from heatmaps with keywords '@{keywords2}'."), selected = selected(), ht_list = ht_list())
-					}
+						if(do_default_brush_action) {
+							default_brush_action(input, output, session, heatmap_id, qq("Found nothing from heatmaps with keywords '@{keywords2}'."), selected = selected(), ht_list = ht_list())
+						}
 
-					if(!is.null(brush_action)) {
-						brush_action2(selected(), input, output, session)
+						if(!is.null(brush_action)) {
+							brush_action2(selected(), input, output, session)
+						}
+						return(invisible(NULL))
+					} else {
+						sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
 					}
-					return(invisible(NULL))
-	    		} else {
-	    			sub_ht_list( make_sub_heatmap(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list()) )
-				}
-			}, res = res)
+				}, res = res)
+			}
 
 			if(do_default_brush_action) {
 				default_brush_action(input, output, session, heatmap_id, selected = selected(), ht_list = ht_list())
@@ -748,14 +796,22 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			
 			req(heatmap_initialized())
 
-			output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
-				if(is.null(selected())) {
-	    			grid.newpage()
-					grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
-	    		} else {
-	    			make_sub_heatmap(input, output, session, heatmap_id, update_size = FALSE, selected = selected(), ht_list = ht_list())
-				}
-			}, res = res)
+			message("(6)")
+			if (plotly) {
+				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
+					make_plotly_sub_heatmap(input, output, session, heatmap_id, update_size = FALSE, selected = selected, ht_list = ht_list)
+				})
+			} else {
+				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
+					if(is.null(selected())) {
+						grid.newpage()
+						grid.text("Select an area of the heatmap", 0.5, 0.5, gp = gpar(fontsize = 14))
+					} else {
+						make_sub_heatmap(input, output, session, heatmap_id, update_size = FALSE, selected = selected(), ht_list = ht_list())
+					}
+				}, res = res)
+			}
 		})
 
 		shiny_env$obs[[heatmap_id]][[qq("@{heatmap_id}_open_table")]] = observeEvent(input[[qq("@{heatmap_id}_open_table")]], {
@@ -1734,9 +1790,9 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 <div>
 <p>Details:</p>
 <pre>
-Target:     @{row_label}
+Target:  @{row_label}
 Sample:  @{column_label}
-Value:         @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
+Value:   @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
 <!--Gene Name:
 UniprotID:-->
 </pre>")
@@ -1906,3 +1962,61 @@ record_observation = function(obs, heatmap_id = shiny_env$current_heatmap_id) {
 	invisible(NULL)
 }
 
+# make a sub heatmap using plotly
+make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_size = TRUE, 
+	selected = NULL, ht_list = NULL, ...) {
+
+	if(is.null( selected() ))
+		return(NULL)
+
+	shiny_env$is_in_sub_heatmap = TRUE
+	on.exit(shiny_env$is_in_sub_heatmap <- FALSE)
+
+	width = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_width")]]
+    height = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]]
+
+	message("Make plotly sub: H=", height, "px, W=", width, "px")
+
+	show_row_names = input[[qq("@{heatmap_id}_show_row_names_checkbox")]]
+	show_column_names = input[[qq("@{heatmap_id}_show_column_names_checkbox")]]
+	show_annotation = input[[qq("@{heatmap_id}_show_annotation_checkbox")]]
+	show_cell_fun = input[[qq("@{heatmap_id}_show_cell_fun_checkbox")]]
+	fill_figure = input[[qq("@{heatmap_id}_fill_figure_checkbox")]]
+
+	if(is.null(show_row_names)) show_row_names = TRUE
+	if(is.null(show_column_names)) show_column_names = TRUE
+	if(is.null(show_annotation)) show_annotation = TRUE
+	if(is.null(show_cell_fun)) show_cell_fun = TRUE
+	if(is.null(fill_figure)) fill_figure = FALSE
+
+
+
+	if(update_size) {
+		updateNumericInput(session, qq("@{heatmap_id}_sub_heatmap_input_width"), value = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_width")]])
+		updateNumericInput(session, qq("@{heatmap_id}_sub_heatmap_input_height"), value = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]])
+	}
+
+	.make_plotly_sub_heatmap(ht_list, selected)
+}
+
+.make_plotly_sub_heatmap <- function(ht_list, selected) {
+	.r <- rev(selected()@listData$row_label@unlistData) # target
+	.c <- selected()@listData$column_label@unlistData # sample
+	.m_full <- ht_list()@ht_list$mat@matrix
+	.m <- .m_full[.r,.c] # value
+	.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
+	dim(.i) <- dim(.m)
+	.col <- grDevices::colorRampPalette(ht_opt("COLOR"))(256)
+	range_full <- range(.m_full)
+	range_sub <- range(.m)
+	range_sub <- length(.col) * (range_sub - range_full[1]) / diff(range_full)
+	range_sub <- pmin(pmax(1, round(range_sub)), length(.col))
+	.col <- .col[range_sub[1]:range_sub[2]]
+	.p <- plotly::plot_ly(x = .c, y = .r, z = .m, type = "heatmap",
+		colors = .col,
+		hoverinfo = 'text', text = .i) |>
+		plotly::colorbar(thickness = 15, outlinewidth = 0, x = -0.5) |>
+		plotly::config(displayModeBar = FALSE) |>
+		plotly::layout(yaxis = list(side = "right"))
+	.p
+}
