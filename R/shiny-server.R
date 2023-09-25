@@ -342,7 +342,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 		}, res = res)
 
 
-		message("(0)")
 		if (plotly) {
 			output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
 				NULL
@@ -471,7 +470,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			updateTextInput(session, qq("@{heatmap_id}_keyword"), value = "")
 
-			message("(1)")
 			if (plotly) {
 				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
@@ -515,7 +513,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			selected(new_selected)
 
-			message("(2)")
 			if (plotly) {
 				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
@@ -560,7 +557,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				selected( selected_copy() )
 			}
 			
-			message("(3)")
 			if (plotly) {
 				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
@@ -599,7 +595,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 			selected( selected_copy() )
 
-			message("(4)")
 			if (plotly) {
 				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
@@ -712,7 +707,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			}
 			selected_copy( selected() )
 
-			message("(5)")
 			if (plotly) {
 				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
@@ -796,7 +790,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			
 			req(heatmap_initialized())
 
-			message("(6)")
 			if (plotly) {
 				# output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot(plot(0))
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
