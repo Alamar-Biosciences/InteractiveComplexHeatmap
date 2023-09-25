@@ -134,9 +134,11 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
+				vertical-align: middle;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
+				vertical-align: middle;
 			}
 		")
 
@@ -149,9 +151,11 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
+				vertical-align: middle;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_output_wrapper {
 				display:table-cell;
+				vertical-align: middle;
 			}
 		")
 
@@ -164,12 +168,15 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
+				vertical-align: middle;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
+				vertical-align: middle;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_output_wrapper {
 				display:table-cell;
+				vertical-align: middle;
 			}
 		")
 
@@ -189,6 +196,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
+				vertical-align: middle;
 			}
 		")
 
@@ -850,6 +858,7 @@ subHeatmapOutputPlotly = function(heatmap_id, title = NULL,
 				plotly::plotlyOutput(qq("@{heatmap_id}_sub_heatmap"), width = width, height = height)
 		    }
 		),
+		# vertical-align: middle;
 		tags$script(HTML(qq('
 			$("#@{heatmap_id}_sub_heatmap_resize").css("width", $("#@{heatmap_id}_sub_heatmap").width() + 4);
 			$("#@{heatmap_id}_sub_heatmap_resize").css("height", $("#@{heatmap_id}_sub_heatmap").height() + 4);
