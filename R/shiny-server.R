@@ -2014,6 +2014,8 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 		hoverinfo = 'text', text = .i) |>
 		plotly::colorbar(thickness = 15, outlinewidth = 0, x = -0.5) |>
 		plotly::config(displayModeBar = FALSE) |>
-		plotly::layout(yaxis = list(side = "right"))
+		plotly::layout(
+			yaxis = list(side = "right"),
+			hoverlabel = list(align = "left", font = list(size = 12)))
 	.p
 }
