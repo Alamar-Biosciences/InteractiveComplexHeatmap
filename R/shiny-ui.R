@@ -55,6 +55,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	output_ui = default_output_ui(heatmap_id), 
 	output_ui_float = FALSE, containment = FALSE,
 	internal = FALSE, add_spinner = F, closable_output = T,
+	plotly = FALSE,
 	...) {
 
 	if(is.null(heatmap_id)) {
@@ -117,7 +118,11 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	main_heatmap_ui = originalHeatmapOutput(heatmap_id, title = title1, width = width1, height = height1, action = action,
 		cursor = cursor, response = response, brush_opt = brush_opt, containment = containment, internal = internal, add_spinner = add_spinner)
 
-	sub_heatmap_ui = subHeatmapOutput(heatmap_id, title = title2, width = width2, height = height2, containment = containment, internal = internal, add_spinner = add_spinner)
+	if (plotly) {
+		sub_heatmap_ui = subHeatmapOutputPlotly(heatmap_id, title = title2, width = width2, height = height2, containment = containment, internal = internal, add_spinner = add_spinner)
+	} else {
+		sub_heatmap_ui = subHeatmapOutput(heatmap_id, title = title2, width = width2, height = height2, containment = containment, internal = internal, add_spinner = add_spinner)
+	}
 
 	output_ui = HeatmapInfoOutput(heatmap_id, title = title3, width = width3, output_ui = output_ui, output_ui_float = output_ui_float,
 		action = action, response = response, internal = internal, closable = closable_output)
@@ -129,9 +134,11 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
+				vertical-align: top;
 			}
 		")
 
@@ -144,9 +151,11 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_output_wrapper {
 				display:table-cell;
+				vertical-align: top;
 			}
 		")
 
@@ -159,12 +168,15 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_output_wrapper {
 				display:table-cell;
+				vertical-align: top;
 			}
 		")
 
@@ -184,6 +196,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
+				vertical-align: top;
 			}
 		")
 
@@ -474,7 +487,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 						),
 						p("Search Heatmap", style = "display:none;")
 					),
-					hidden(tabPanel(HTML("<i class='fa none'></i>"),
+					shinyjs::hidden(tabPanel(HTML("<i class='fa none'></i>"),
 					         div(
 					           id = qq('@{heatmap_id}_tabs-brush'),
 					           HTML(qq('
@@ -498,7 +511,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 					           sliderInput(qq("@{heatmap_id}_color_pickers_opacity"), label = "Opacity", min = 0, max = 1, value = pickr_opacity)
 					         )
 					)),
-					hidden(tabPanel(HTML("<i class='fa none'></i>"),
+					shinyjs::hidden(tabPanel(HTML("<i class='fa none'></i>"),
 						div(
 							id = qq('@{heatmap_id}_tabs-save-image'),
 							radioButtons(qq("@{heatmap_id}_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
@@ -522,7 +535,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 				$('#@{heatmap_id}_heatmap_input_width').val($('#@{heatmap_id}_heatmap').width());
 				$('#@{heatmap_id}_heatmap_input_height').val($('#@{heatmap_id}_heatmap').height());
 			")))
-		)	
+		)
 	)
 	main_heatmap_ui
 }
@@ -592,6 +605,19 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 			style = "display:none;",
 			tabsetPanel(
 			  id = qq('@{heatmap_id}_sub_tabs_panels'),
+				tabPanel(HTML("<i class='fa fa-table'></i>"),
+					div(id = qq("@{heatmap_id}_sub_tabs-table"),
+						actionButton(qq("@{heatmap_id}_open_table"), label = "Export Sub-Heatmap Table", class = "btn btn-primary")
+					)
+				),
+				tabPanel(HTML("<i class='fa fa-images'></i>"),
+					div(id = qq('@{heatmap_id}_sub_tabs-save-image'),
+						radioButtons(qq("@{heatmap_id}_sub_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
+						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
+						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
+						downloadButton(qq("@{heatmap_id}_sub_heatmap_download_button"), "Save image", class = "btn btn-primary")
+					),
+				),
 				tabPanel(HTML("<i class='fa fa-tasks'></i>"),
 					div(id = qq('@{heatmap_id}_sub_tabs-setting'), 
 						div(
@@ -631,19 +657,6 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 							")))
 						)
 					)
-				),
-				tabPanel(HTML("<i class='fa fa-table'></i>"),
-					div(id = qq("@{heatmap_id}_sub_tabs-table"),
-						actionButton(qq("@{heatmap_id}_open_table"), label = "Export Sub-Heatmap Table", class = "btn btn-primary")
-					)
-				),
-				tabPanel(HTML("<i class='fa fa-images'></i>"),
-					div(id = qq('@{heatmap_id}_sub_tabs-save-image'),
-						radioButtons(qq("@{heatmap_id}_sub_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
-						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
-						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
-						downloadButton(qq("@{heatmap_id}_sub_heatmap_download_button"), "Save image", class = "btn btn-primary")
-					),
 				)
 			),
 			tags$script(HTML(qq("
@@ -797,4 +810,125 @@ add_js_css_dep = function(heatmap_id, js_file, css_file, envir = parent.frame())
 		script     = "foo.js",
 		head = paste0(temp_js, "\n", temp_css)
     )
+}
+
+
+subHeatmapOutputPlotly = function(heatmap_id, title = NULL,
+	width = 400, height = 350, containment = FALSE, internal = FALSE, add_spinner = F) {
+
+	if(missing(heatmap_id)) {
+		if(length(shiny_env$heatmap) == 1) {
+			heatmap_id = names(shiny_env$heatmap)
+		} else if(length(shiny_env$heatmap) == 0) {
+			increase_widget_index()
+			heatmap_id = paste0("ht", get_widget_index())
+		}
+	}
+	if(is.null(shiny_env$heatmap[[heatmap_id]])) {
+		shiny_env$heatmap[[heatmap_id]] = list()
+		if(!internal) shiny_env$current_heatmap_id = heatmap_id
+	}
+
+	if(identical(containment, FALSE)) {
+		containment = "false"
+	} else if(identical(containment, TRUE)) {
+		containment = qq("$('#@{heatmap_id}_sub_heatmap_group').parent()")
+	} else {
+		containment = paste0('"', containment, '"')
+	}
+
+	layout = shiny_env$heatmap[[heatmap_id]]$layout
+	if(is.null(layout)) layout = ""
+
+	heatmap_hash = paste0("c", digest(heatmap_id, "crc32"))
+	sub_heatmap_ui = div(
+		id = qq("@{heatmap_id}_sub_heatmap_group"),
+		
+		add_js_css_dep(heatmap_id, js_file = "ht-sub.js", css_file = "ht-sub.css"),
+		
+		if(identical(title, NULL) || identical(title, "")) NULL else h5(title),
+		div(id = qq("@{heatmap_id}_sub_heatmap_resize"),
+		    if(add_spinner) {
+		      shinycssloaders::withSpinner(
+				# plotOutput(qq("@{heatmap_id}_sub_heatmap"), height = height, width = width)
+				plotly::plotlyOutput(qq("@{heatmap_id}_sub_heatmap"), width = width, height = height)
+				,type = 8, size = 0.3)
+		    } else {
+		    	# plotOutput(qq("@{heatmap_id}_sub_heatmap"), height = height, width = width)
+				plotly::plotlyOutput(qq("@{heatmap_id}_sub_heatmap"), width = width, height = height)
+		    }
+		),
+		tags$script(HTML(qq('
+			$("#@{heatmap_id}_sub_heatmap_resize").css("width", $("#@{heatmap_id}_sub_heatmap").width() + 4);
+			$("#@{heatmap_id}_sub_heatmap_resize").css("height", $("#@{heatmap_id}_sub_heatmap").height() + 4);
+		'))),
+		div(id = qq("@{heatmap_id}_sub_heatmap_control"),
+			style = "display:none;",
+			tabsetPanel(
+			  id = qq('@{heatmap_id}_sub_tabs_panels'),
+				tabPanel(HTML("<i class='fa fa-table'></i>"),
+					div(id = qq("@{heatmap_id}_sub_tabs-table"),
+						actionButton(qq("@{heatmap_id}_open_table"), label = "Export Sub-Heatmap Table", class = "btn btn-primary")
+					)
+				),
+				tabPanel(HTML("<i class='fa fa-images'></i>"),
+					div(id = qq('@{heatmap_id}_sub_tabs-save-image'),
+						radioButtons(qq("@{heatmap_id}_sub_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
+						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
+						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
+						downloadButton(qq("@{heatmap_id}_sub_heatmap_download_button"), "Save image", class = "btn btn-primary")
+					),
+				),
+				# tabPanel(HTML("<i class='fa fa-tasks'></i>"),
+				# 	div(id = qq('@{heatmap_id}_sub_tabs-setting'), 
+				# 		div(
+				# 			div(checkboxInput(qq("@{heatmap_id}_show_row_names_checkbox"), label = "Show row names", value = TRUE), style = "float:left;width:150px"),
+				# 			div(checkboxInput(qq("@{heatmap_id}_show_column_names_checkbox"), label = "Show column names", value = TRUE), style = "float:left;width:160px"),
+				# 			div(style = "clear: both;")
+				# 		),
+				# 		div(
+				# 			checkboxInput(qq("@{heatmap_id}_show_annotation_checkbox"), label = "Show heatmap annotations", value = TRUE),
+				# 			checkboxInput(qq("@{heatmap_id}_show_cell_fun_checkbox"), label = "Show cell decorations", value = TRUE),
+				# 			checkboxInput(qq("@{heatmap_id}_fill_figure_checkbox"), label = "Fill figure region", value = FALSE)
+				# 		),
+				# 		hr(),
+				# 		div(
+				# 			checkboxInput(qq("@{heatmap_id}_remove_empty_checkbox"), label = "Remove empty rows and columns", value = FALSE),
+				# 			HTML(qq('
+				# 		<p style="padding-top:4px;">
+				# 		Remove <input id="@{heatmap_id}_post_remove" type="number" class="form-control" min="1" value="1" style="width:60px;display:inline;"/>
+				# 		<span id="@{heatmap_id}_post_remove_which">rows</span> from 
+				# 		<select id="@{heatmap_id}_post_remove_dimension" class="form-control" style="width:auto;display:inline;">
+				# 		<option value="top" selected>top</option>
+				# 		<option value="bottom">bottom</option>
+				# 		<option value="left">left</option>
+				# 		<option value="right">right</option></select>
+				# 		</p>
+				# 			')),
+				# 			actionButton(qq("@{heatmap_id}_post_remove_submit"), "Remove", class = "btn btn-danger"),
+				# 			actionButton(qq("@{heatmap_id}_post_remove_reset"), "Reset", class = "btn btn-primary"),
+				# 			tags$script(HTML(qq("
+				# 				$('#@{heatmap_id}_post_remove_dimension').change(function() {
+				# 					if($(this).val() == 1 || $(this).val() == 2) {
+				# 						$('#@{heatmap_id}_post_remove_which').text('rows');
+				# 					} else {
+				# 						$('#@{heatmap_id}_post_remove_which').text('columns');
+				# 					}
+				# 				});
+				# 			")))
+				# 		)
+				# 	)
+				# )
+			),
+			tags$script(HTML(qq("
+				$('#@{heatmap_id}_sub_heatmap_download_image_width').val($('#@{heatmap_id}_sub_heatmap').width());
+				$('#@{heatmap_id}_sub_heatmap_download_image_height').val($('#@{heatmap_id}_sub_heatmap').height());
+				$('#@{heatmap_id}_sub_heatmap_input_width').val($('#@{heatmap_id}_sub_heatmap').width());
+				$('#@{heatmap_id}_sub_heatmap_input_height').val($('#@{heatmap_id}_sub_heatmap').height());
+			")))
+		),
+		style = qq("width:@{width}; height:@{height};")
+	)
+
+	sub_heatmap_ui
 }

@@ -107,14 +107,14 @@ $(function() {
 
 	
 	var objs2 = $('#@{heatmap_id}_sub_heatmap_control li a');
-	$(objs2[0]).attr("title", "Configure sub-heatmap");
-	$(objs2[1]).attr("title", "Export to table");
-	$(objs2[2]).attr("title", "Save sub-heatmap as an image");
+	$(objs2[0]).attr("title", "Export to table");
+	$(objs2[1]).attr("title", "Save sub-heatmap as an image");
+	$(objs2[2]).attr("title", "Configure sub-heatmap");
 	$(objs2[3]).attr("title", "Resize sub-heatmap");
 
-	var href = $(objs2[0]).attr("href");
+	var href = $(objs2[2]).attr("href");
 	$(href).attr("visible", "0")
-	$(objs2[0]).css("background-color", "white");
+	$(objs2[2]).css("background-color", "white");
 	$(href).parent().css("display", "none");
 
 	for(var i = 0; i < objs2.length; i ++) {
