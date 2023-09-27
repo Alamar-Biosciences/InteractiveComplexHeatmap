@@ -134,11 +134,11 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 		")
 
@@ -151,11 +151,11 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_output_wrapper {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 		")
 
@@ -168,15 +168,15 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_sub_heatmap_group {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 			.@{heatmap_id}_widget #@{heatmap_id}_output_wrapper {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 		")
 
@@ -196,7 +196,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 		layout_css = qq("
 			.@{heatmap_id}_widget #@{heatmap_id}_heatmap_group {
 				display:table-cell;
-				vertical-align: middle;
+				vertical-align: top;
 			}
 		")
 
@@ -535,7 +535,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 				$('#@{heatmap_id}_heatmap_input_width').val($('#@{heatmap_id}_heatmap').width());
 				$('#@{heatmap_id}_heatmap_input_height').val($('#@{heatmap_id}_heatmap').height());
 			")))
-		)	
+		)
 	)
 	main_heatmap_ui
 }
@@ -858,12 +858,11 @@ subHeatmapOutputPlotly = function(heatmap_id, title = NULL,
 				plotly::plotlyOutput(qq("@{heatmap_id}_sub_heatmap"), width = width, height = height)
 		    }
 		),
-		# vertical-align: middle;
 		tags$script(HTML(qq('
 			$("#@{heatmap_id}_sub_heatmap_resize").css("width", $("#@{heatmap_id}_sub_heatmap").width() + 4);
 			$("#@{heatmap_id}_sub_heatmap_resize").css("height", $("#@{heatmap_id}_sub_heatmap").height() + 4);
 		'))),
-		div(id = qq("@{heatmap_id}_sub_heatmap_control"),
+		shinyjs::hidden(div(id = qq("@{heatmap_id}_sub_heatmap_control"),
 			style = "display:none;",
 			tabsetPanel(
 			  id = qq('@{heatmap_id}_sub_tabs_panels'),
@@ -927,7 +926,7 @@ subHeatmapOutputPlotly = function(heatmap_id, title = NULL,
 				$('#@{heatmap_id}_sub_heatmap_input_width').val($('#@{heatmap_id}_sub_heatmap').width());
 				$('#@{heatmap_id}_sub_heatmap_input_height').val($('#@{heatmap_id}_sub_heatmap').height());
 			")))
-		),
+		)),
 		style = qq("width:@{width}; height:@{height};")
 	)
 
