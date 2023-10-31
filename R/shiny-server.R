@@ -1973,6 +1973,11 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
     height = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]]
 
 	message("Make plotly sub: H=", height, "px, W=", width, "px")
+	clickData <- event_data("plotly_click", source = "plotly_subheatmap")
+	if (!is.null(clickData)) {
+	  message("clickData: ", clickData[["x"]], clickData[["y"]])
+	}
+	
 
 	show_row_names = input[[qq("@{heatmap_id}_show_row_names_checkbox")]]
 	show_column_names = input[[qq("@{heatmap_id}_show_column_names_checkbox")]]
@@ -2011,7 +2016,9 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	.col <- .col[range_sub[1]:range_sub[2]]
 	.p <- plotly::plot_ly(x = .c, y = .r, z = .m, type = "heatmap",
 		colors = .col,
-		hoverinfo = 'text', text = .i) |>
+		hoverinfo = 'text', text = .i,
+		source = "plotly_subheatmap"
+		) |>
 		plotly::colorbar(thickness = 15, outlinewidth = 0, x = -0.5) |>
 		plotly::config(displayModeBar = FALSE) |>
 		plotly::layout(
