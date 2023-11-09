@@ -11,6 +11,14 @@ set.seed(0)
 X <- matrix(runif(nr * nc, -1, 1), nr, nc)
 dimnames(X) <- list(paste0("r_", 1:nr), paste0("c_", 1:nc))
 
+# mock annotation
+mock_col_annotation <- data.frame(
+  Condition = sample(c("Healthy", "Disease", "Control"), nc, replace = T), # categorical 
+  Sex = sample(c("Male", "Female"), nc, replace = T), # categorical 
+  Age = sample(50:90, nc, replace = T) # numerical
+)
+rownames(mock_col_annotation) <- colnames(X)
+
 use_plotly=T
 
 ui <- fluidPage(
@@ -35,7 +43,9 @@ server <- function(input, output, session) {
     #     row_names_gp = gpar(fontsize = sc),
     #     column_names_gp = gpar(fontsize = sc))
     ht1 <- Heatmap(X, name = "mat",
-        show_row_names = TRUE, show_column_names = TRUE, row_title_rot = 0)
+        show_row_names = TRUE, show_column_names = TRUE, row_title_rot = 0,
+        top_annotation = HeatmapAnnotation(df = mock_col_annotation)
+        )
     makeInteractiveComplexHeatmap(input, output, session, ht1, plotly = use_plotly)
 }
 
