@@ -475,6 +475,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
 					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
 				})
+				
 			} else {
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 					
@@ -518,6 +519,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
 					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
 				})
+				
 			} else {
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 					
@@ -562,6 +564,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
 					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
 				})
+				
 			} else {
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 					
@@ -600,6 +603,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
 					make_plotly_sub_heatmap(input, output, session, heatmap_id, selected = selected, ht_list = ht_list)
 				})
+				
 			} else {
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 					
@@ -795,6 +799,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = plotly::renderPlotly({
 					make_plotly_sub_heatmap(input, output, session, heatmap_id, update_size = FALSE, selected = selected, ht_list = ht_list)
 				})
+				
 			} else {
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
 					if(is.null(selected())) {
@@ -1645,77 +1650,77 @@ default_brush_action = function(input, output, session, heatmap_id,
   shinyjs::hideElement(id = qq("@{heatmap_id}_info"))
   shinyjs::showElement(id = qq("@{heatmap_id}_sub_heatmap_resize"))
 
-  output[[qq("@{heatmap_id}_info")]] = renderUI({
-    
-    if(is.null(selected)) {
-    #   HTML(qq("<p>@{default_text}</p>"))
-		HTML("<p></p>")
-    } else {
-		return(HTML("<p></p>"))
-      
-      selected = selected[!is.na(selected$row_slice), ]
-      
-      n_ht = length(unique(selected$heatmap))
-      
-      if(ht_list@direction == "horizontal") {
-        l1 = !duplicated(selected$row_slice)
-        nr = length(unlist(selected$row_index[l1]))
-        
-        l2 = !duplicated(paste0(selected$heatmap, selected$column_slice))
-        nc = length(unlist(selected$column_index[l2]))
-      } else {
-        l1 = !duplicated(paste0(selected$heatmap, selected$row_slice))
-        nr = length(unlist(selected$row_index[l1]))
-        
-        l2 = !duplicated(selected$column_slice)
-        nc = length(unlist(selected$column_index[l2]))
-      }
-      
-      selected_df = as.data.frame(selected)
-      
-      json_list = sapply(1:nrow(selected_df), function(i) toJSON(selected_df[i, ]))
-      json_list = lapply(json_list, function(x) {
-        x = gsub("^\\[|]$", "", x)
-        x =  gsub('"slice":', '\n  "slice":', x)
-        x =  gsub('"row_slice":', '\n  "row_slice":', x)
-        x =  gsub('"column_slice":', '\n  "column_slice":', x)
-        x =  gsub('"row_index":', '\n  "row_index":', x)
-        x =  gsub('"column_index":', '\n  "column_index":', x)
-        x
-      })
-      json_txt = paste0("[", paste(json_list, collapse = ",\n"), "]")
-      json_txt = gsub("^(.)", "  \\1", json_txt)
-      json_txt = gsub("\n", "\n  ", json_txt)
-      dump_txt = qq("jsonlite::fromJSON('\n@{json_txt}\n')")
-      
-      HTML(paste(
-        qq("<p>Selected over @{n_ht} heatmap@{ifelse(n_ht > 1, 's', '')} with @{nr} row@{ifelse(nr > 1, 's', '')} and @{nc} column@{ifelse(nc > 1, 's', '')}. Row and column indices can be obtained by copying following code:</p>"),
-        "<div>",
-        qq("<p><button id='@{heatmap_id}_show_code' class='btn btn-primary'>show/hide code</button></p>"),
-        qq("<div id='@{heatmap_id}_code_wrapper'>"),
-        qq("<pre id='@{heatmap_id}_code'>"),
-        dump_txt,
-        "</pre>",
-        "</div>",
-        "</div>",
-        "<script>",
-        qq("$('#@{heatmap_id}_code_wrapper').hide();"),
-        qq("$('#@{heatmap_id}_show_code').click(function(){ $('#@{heatmap_id}_code_wrapper').toggle(); });"),
-        qq("create_clipboard('@{heatmap_id}_code');"),
-        "</script>",
-        
-        sep = "\n"))
-      
-      
-      
-    }
-  })
+#   output[[qq("@{heatmap_id}_info")]] = renderUI({
+# 
+#     if(is.null(selected)) {
+#     #   HTML(qq("<p>@{default_text}</p>"))
+# 		HTML("<p></p>")
+#     } else {
+# 		return(HTML("<p></p>"))
+# 
+#       # selected = selected[!is.na(selected$row_slice), ]
+#       # 
+#       # n_ht = length(unique(selected$heatmap))
+#       # 
+#       # if(ht_list@direction == "horizontal") {
+#       #   l1 = !duplicated(selected$row_slice)
+#       #   nr = length(unlist(selected$row_index[l1]))
+#       # 
+#       #   l2 = !duplicated(paste0(selected$heatmap, selected$column_slice))
+#       #   nc = length(unlist(selected$column_index[l2]))
+#       # } else {
+#       #   l1 = !duplicated(paste0(selected$heatmap, selected$row_slice))
+#       #   nr = length(unlist(selected$row_index[l1]))
+#       # 
+#       #   l2 = !duplicated(selected$column_slice)
+#       #   nc = length(unlist(selected$column_index[l2]))
+#       # }
+#       # 
+#       # selected_df = as.data.frame(selected)
+#       # 
+#       # json_list = sapply(1:nrow(selected_df), function(i) toJSON(selected_df[i, ]))
+#       # json_list = lapply(json_list, function(x) {
+#       #   x = gsub("^\\[|]$", "", x)
+#       #   x =  gsub('"slice":', '\n  "slice":', x)
+#       #   x =  gsub('"row_slice":', '\n  "row_slice":', x)
+#       #   x =  gsub('"column_slice":', '\n  "column_slice":', x)
+#       #   x =  gsub('"row_index":', '\n  "row_index":', x)
+#       #   x =  gsub('"column_index":', '\n  "column_index":', x)
+#       #   x
+#       # })
+#       # json_txt = paste0("[", paste(json_list, collapse = ",\n"), "]")
+#       # json_txt = gsub("^(.)", "  \\1", json_txt)
+#       # json_txt = gsub("\n", "\n  ", json_txt)
+#       # dump_txt = qq("jsonlite::fromJSON('\n@{json_txt}\n')")
+#       # 
+#       # HTML(paste(
+#       #   qq("<p>Selected over @{n_ht} heatmap@{ifelse(n_ht > 1, 's', '')} with @{nr} row@{ifelse(nr > 1, 's', '')} and @{nc} column@{ifelse(nc > 1, 's', '')}. Row and column indices can be obtained by copying following code:</p>"),
+#       #   "<div>",
+#       #   qq("<p><button id='@{heatmap_id}_show_code' class='btn btn-primary'>show/hide code</button></p>"),
+#       #   qq("<div id='@{heatmap_id}_code_wrapper'>"),
+#       #   qq("<pre id='@{heatmap_id}_code'>"),
+#       #   dump_txt,
+#       #   "</pre>",
+#       #   "</div>",
+#       #   "</div>",
+#       #   "<script>",
+#       #   qq("$('#@{heatmap_id}_code_wrapper').hide();"),
+#       #   qq("$('#@{heatmap_id}_show_code').click(function(){ $('#@{heatmap_id}_code_wrapper').toggle(); });"),
+#       #   qq("create_clipboard('@{heatmap_id}_code');"),
+#       #   "</script>",
+#       # 
+#       #   sep = "\n"))
+# 
+# 
+# 
+#     }
+#   })
 }
 
 default_click_action = function(input, output, session, heatmap_id, selected = NULL, ht_list = NULL, action = "click") {
 
 	shinyjs::hideElement(id = qq("@{heatmap_id}_sub_heatmap_resize"))
-	shinyjs::showElement(id = qq("@{heatmap_id}_info"))
+	
 
 	output[[qq("@{heatmap_id}_info")]] = renderUI({
 
@@ -1817,6 +1822,8 @@ UniprotID:-->
 			}
 		}
 	})
+	
+	shinyjs::showElement(id = qq("@{heatmap_id}_info"))
 }
 
 get_anno_value = function(ha, ind) {
@@ -1963,22 +1970,40 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	# str(selected(),3)
 	# message("SUBHEATMAP HT_LIST()")
 	# str(ht_list(),3)
+  
 	if(is.null( selected() ))
 		return(NULL)
+  
+  shinyjs::showElement(id = qq("@{heatmap_id}_info"))
 
 	shiny_env$is_in_sub_heatmap = TRUE
 	on.exit(shiny_env$is_in_sub_heatmap <- FALSE)
 
 	width = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_width")]]
-    height = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]]
+  height = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]]
 
 	message("Make plotly sub: H=", height, "px, W=", width, "px")
-	clickData <- event_data("plotly_click", source = "plotly_subheatmap")
-	if (!is.null(clickData)) {
-	  message("clickData: ", clickData[["x"]], clickData[["y"]])
-	}
 	
-
+	output[[qq("@{heatmap_id}_info")]] = renderUI({
+	  
+	  clickData <- plotly::event_data("plotly_click", source = "plotly_subheatmap")
+	  if (!is.null(clickData)) {
+	    message("clickData: ", clickData[["x"]], clickData[["y"]])
+	    #shinyjs::showElement(id = qq("@{heatmap_id}_info"))
+	    HTML(
+	      paste("clickData:", clickData[["x"]], clickData[["y"]],
+	            "value:", round(clickData[["z"]], 2),
+	            sep = '<br/>')
+	    )
+	  } else {
+	    #shinyjs::hideElement(id = qq("@{heatmap_id}_info"))
+	    HTML("<p></p>")
+	  }
+	  
+	  
+	  
+	})
+	
 	show_row_names = input[[qq("@{heatmap_id}_show_row_names_checkbox")]]
 	show_column_names = input[[qq("@{heatmap_id}_show_column_names_checkbox")]]
 	show_annotation = input[[qq("@{heatmap_id}_show_annotation_checkbox")]]
