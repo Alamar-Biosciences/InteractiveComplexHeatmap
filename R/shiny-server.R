@@ -2003,7 +2003,7 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	.m <- .m_full[.r,.c] # value
 	.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
 	dim(.i) <- dim(.m)
-	.col <- grDevices::colorRampPalette(ht_opt("COLOR"))(256)
+	.col <- grDevices::colorRampPalette(ht_opt("COLOR"))(1001)
 	range_full <- range(.m_full)
 	range_sub <- range(.m)
 	range_sub <- length(.col) * (range_sub - range_full[1]) / diff(range_full)
