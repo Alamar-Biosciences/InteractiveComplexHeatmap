@@ -2015,7 +2015,10 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 		plotly::colorbar(thickness = 15, outlinewidth = 0, x = -0.5) |>
 		plotly::config(displayModeBar = FALSE) |>
 		plotly::layout(
-			yaxis = list(side = "right"),
-			hoverlabel = list(align = "left", font = list(size = 12)))
+			paper_bgcolor = "rgba(0, 0, 0, 0)",
+			plot_bgcolor = "rgba(0, 0, 0, 0)",
+			yaxis = list(side = "right", autotick = FALSE),
+			xaxis = list(autotick = FALSE),
+			hoverlabel = list(align = "left", font = list(size = 10)))
 	.p
 }
