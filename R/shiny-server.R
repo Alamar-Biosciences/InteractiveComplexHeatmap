@@ -2014,6 +2014,9 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	range_sub <- length(.col) * (range_sub - range_full[1]) / diff(range_full)
 	range_sub <- pmin(pmax(1, round(range_sub)), length(.col))
 	.col <- .col[range_sub[1]:range_sub[2]]
+
+	str(list(range_full=range_full, range_sub=range(.m), range_sub_round=range_sub))
+
 	.p <- plotly::plot_ly(x = .c, y = .r, z = .m, type = "heatmap",
 		colors = .col,
 		hoverinfo = 'text', text = .i) |>
