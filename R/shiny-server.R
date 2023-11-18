@@ -2000,22 +2000,33 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	.r <- rev(selected()@listData$row_label@unlistData) # target
 	.c <- selected()@listData$column_label@unlistData # sample
 	.m_full <- ht_list()@ht_list[[1]]@matrix
+
+	label_size = 9
+	row_size <- ht_list()@ht_list[[1]]@row_names_param$gp$fontsize
+	col_size <- ht_list()@ht_list[[1]]@column_names_param$gp$fontsize
+
 	.m <- .m_full[.r,.c] # value
 	.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
 	dim(.i) <- dim(.m)
-	.col <- grDevices::colorRampPalette(ht_opt("COLOR"))(256)
+	.col <- grDevices::colorRampPalette(ht_opt("COLOR"))(1001)
 	range_full <- range(.m_full)
 	range_sub <- range(.m)
 	range_sub <- length(.col) * (range_sub - range_full[1]) / diff(range_full)
 	range_sub <- pmin(pmax(1, round(range_sub)), length(.col))
 	.col <- .col[range_sub[1]:range_sub[2]]
+
+	str(list(range_full=range_full, range_sub=range(.m), range_sub_round=range_sub))
+
 	.p <- plotly::plot_ly(x = .c, y = .r, z = .m, type = "heatmap",
 		colors = .col,
 		hoverinfo = 'text', text = .i) |>
 		plotly::colorbar(thickness = 15, outlinewidth = 0, x = -0.5) |>
 		plotly::config(displayModeBar = FALSE) |>
 		plotly::layout(
-			yaxis = list(side = "right"),
-			hoverlabel = list(align = "left", font = list(size = 12)))
+			paper_bgcolor = "rgba(0, 0, 0, 0)",
+			plot_bgcolor = "rgba(0, 0, 0, 0)",
+			yaxis = list(tickfont = list(size = row_size), autotick = FALSE, side = "right"),
+			xaxis = list(tickfont = list(size = col_size), autotick = FALSE),
+			hoverlabel = list(align = "left", font = list(size = label_size)))
 	.p
 }
