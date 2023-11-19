@@ -1996,6 +1996,40 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	.make_plotly_sub_heatmap(ht_list, selected)
 }
 
+sub_ht_col_fun <- function(x) {
+	p = sum(x > 0)/sum(x != 0)
+	if(p > 0.25 && p < 0.75) {
+		if(length(unique(x)) >= 100) {
+			q1 = stats::quantile(abs(x), 0.99, na.rm = TRUE)
+			col_range = c(-q1, q1)
+			# col_fun = circlize::colorRamp2(seq(-q1, q1, length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+		} else {
+			q1 = max(abs(x))
+			col_range = c(-q1, q1)
+			# col_fun = circlize::colorRamp2(seq(-q1, q1, length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+		}
+	} else {
+		if(length(unique(x)) >= 100) {
+			q1 = stats::quantile(x, 0.01, na.rm = TRUE)
+			q2 = stats::quantile(x, 0.99, na.rm = TRUE)
+			if(q1 == q2) {
+				col_range = c(min(x), max(x))
+				# col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+			} else if(length(unique(x[x > q1 & x < q2])) == 1) {
+				col_range = c(min(x), max(x))
+				# col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+			} else {
+				col_range = c(q1, q2)
+				# col_fun = circlize::colorRamp2(seq(q1, q2, length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+			}
+		} else {
+			col_range = c(min(x), max(x))
+			# col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+		}
+	}
+	unname(col_range)
+}
+
 .make_plotly_sub_heatmap <- function(ht_list, selected) {
 	.r <- rev(selected()@listData$row_label@unlistData) # target
 	.c <- selected()@listData$column_label@unlistData # sample
@@ -2009,13 +2043,13 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
 	dim(.i) <- dim(.m)
 	.col <- grDevices::colorRampPalette(ht_opt("COLOR"))(1001)
-	range_full <- range(.m_full)
+
+	range_full <- sub_ht_col_fun(.m_full)
+
 	range_sub <- range(.m)
 	range_sub <- length(.col) * (range_sub - range_full[1]) / diff(range_full)
 	range_sub <- pmin(pmax(1, round(range_sub)), length(.col))
 	.col <- .col[range_sub[1]:range_sub[2]]
-
-	str(list(range_full=range_full, range_sub=range(.m), range_sub_round=range_sub))
 
 	.p <- plotly::plot_ly(x = .c, y = .r, z = .m, type = "heatmap",
 		colors = .col,
