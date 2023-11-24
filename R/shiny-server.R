@@ -2027,6 +2027,7 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
                    modeBarButtonsToRemove = c("hoverClosestCartesian", "hoverCompareCartesian",
                                  "lasso2d", "select2d", "autoScale2d")) |>
 		plotly::layout(
+      margin = list(t=40),
 			paper_bgcolor = "rgba(0, 0, 0, 0)",
 			plot_bgcolor = "rgba(0, 0, 0, 0)",
       modebar=list(bgcolor="transparent", color='gray', activecolor='gray'),
