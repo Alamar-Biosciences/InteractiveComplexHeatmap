@@ -475,18 +475,18 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 			style = "display:none;",
 			{
 				tbl = list(
-					tabPanel(HTML("<i class='fa fa-search'></i>"),
-						div(id = qq('@{heatmap_id}_tabs-search'), 
-							div(textInput(qq("@{heatmap_id}_keyword"), placeholder = "Keywords separated by ','", label = "Search:"), style = "width:250px;float:left;"),
-							#div(checkboxInput(qq("@{heatmap_id}_search_regexpr"), label = "Regular expression", value = FALSE), style = "width:150px;float:left;padding-top:20px;padding-left:4px;"),
-							div(style = "clear: both;"),
-							radioButtons(qq("@{heatmap_id}_search_where"), label = "Search by", choices = list("Row" = 1, "Column" = 2), selected = 1, inline = TRUE),
-							checkboxGroupInput(qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = "loading", choiceValues = "", selected = ""),
-							#checkboxGroupInput(qq("@{heatmap_id}_search_extend"), label = "Extend sub-heatmap to all heatmaps and annotations?", choiceNames = "yes", choiceValues = 1, selected = NULL),
-							actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
-						),
-						p("Search Heatmap", style = "display:none;")
-					),
+#					tabPanel(HTML("<i class='fa fa-search'></i>"),
+#						div(id = qq('@{heatmap_id}_tabs-search'), 
+#							div(textInput(qq("@{heatmap_id}_keyword"), placeholder = "Keywords separated by ','", label = "Search:"), style = "width:250px;float:left;"),
+#							#div(checkboxInput(qq("@{heatmap_id}_search_regexpr"), label = "Regular expression", value = FALSE), style = "width:150px;float:left;padding-top:20px;padding-left:4px;"),
+#							div(style = "clear: both;"),
+#							radioButtons(qq("@{heatmap_id}_search_where"), label = "Search by", choices = list("Row" = 1, "Column" = 2), selected = 1, inline = TRUE),
+#							checkboxGroupInput(qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = "loading", choiceValues = "", selected = ""),
+#							#checkboxGroupInput(qq("@{heatmap_id}_search_extend"), label = "Extend sub-heatmap to all heatmaps and annotations?", choiceNames = "yes", choiceValues = 1, selected = NULL),
+#							actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
+#						),
+#						p("Search Heatmap", style = "display:none;")
+#					),
 					shinyjs::hidden(tabPanel(HTML("<i class='fa none'></i>"),
 					         div(
 					           id = qq('@{heatmap_id}_tabs-brush'),
