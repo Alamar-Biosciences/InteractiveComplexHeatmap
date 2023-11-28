@@ -2155,7 +2155,5 @@ sub_ht_col_vals <- function(x) {
 			yaxis = list(tickfont = list(size = row_size), autotick = FALSE, side = "right"),
 			xaxis = list(tickfont = list(size = col_size), autotick = FALSE),
 			hoverlabel = list(align = "left", font = list(size = label_size)))
-	# if (!info)
-	# 	.p <- plotly::style(p, hoverinfo = "none", traces = 1)
 	.p
 }
