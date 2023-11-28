@@ -1996,17 +1996,18 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	.make_plotly_sub_heatmap(ht_list, selected)
 }
 
-sub_ht_col_fun <- function(x) {
+sub_ht_col_vals <- function(x) {
 	p = sum(x > 0)/sum(x != 0)
+	COLOR <- ht_opt("COLOR")
 	if(p > 0.25 && p < 0.75) {
 		if(length(unique(x)) >= 100) {
 			q1 = stats::quantile(abs(x), 0.99, na.rm = TRUE)
 			col_range = c(-q1, q1)
-			# col_fun = circlize::colorRamp2(seq(-q1, q1, length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+			col_fun = circlize::colorRamp2(seq(-q1, q1, length.out = length(COLOR)), COLOR)
 		} else {
 			q1 = max(abs(x))
 			col_range = c(-q1, q1)
-			# col_fun = circlize::colorRamp2(seq(-q1, q1, length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+			col_fun = circlize::colorRamp2(seq(-q1, q1, length.out = length(COLOR)), COLOR)
 		}
 	} else {
 		if(length(unique(x)) >= 100) {
@@ -2014,20 +2015,20 @@ sub_ht_col_fun <- function(x) {
 			q2 = stats::quantile(x, 0.99, na.rm = TRUE)
 			if(q1 == q2) {
 				col_range = c(min(x), max(x))
-				# col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+				col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(COLOR)), COLOR)
 			} else if(length(unique(x[x > q1 & x < q2])) == 1) {
 				col_range = c(min(x), max(x))
-				# col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+				col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(COLOR)), COLOR)
 			} else {
 				col_range = c(q1, q2)
-				# col_fun = circlize::colorRamp2(seq(q1, q2, length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+				col_fun = circlize::colorRamp2(seq(q1, q2, length.out = length(COLOR)), COLOR)
 			}
 		} else {
 			col_range = c(min(x), max(x))
-			# col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(ht_opt$COLOR)), ht_opt$COLOR)
+			col_fun = circlize::colorRamp2(seq(min(x), max(x), length.out = length(COLOR)), COLOR)
 		}
 	}
-	unname(col_range)
+	col_fun
 }
 
 .make_plotly_sub_heatmap <- function(ht_list, selected) {
@@ -2042,14 +2043,12 @@ sub_ht_col_fun <- function(x) {
 	.m <- .m_full[.r,.c] # value
 	.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
 	dim(.i) <- dim(.m)
-	.col <- grDevices::colorRampPalette(ht_opt("COLOR"))(1001)
 
-	range_full <- sub_ht_col_fun(.m_full)
-
-	range_sub <- range(.m)
-	range_sub <- length(.col) * (range_sub - range_full[1]) / diff(range_full)
-	range_sub <- pmin(pmax(1, round(range_sub)), length(.col))
-	.col <- .col[range_sub[1]:range_sub[2]]
+	# we provide the main heatmap to come up with the breaks
+	# sub_ht_col_vals returns a function that maps values according to the breaks used in the main heatmap
+	# thus it will be a 1-t-1 match re the breaks
+	# then plotly can interpolate between the sub heatmap range
+	.col <- sub_ht_col_vals(.m_full)(seq(min(.m), max(.m), length.out = 101))
 
 	.p <- plotly::plot_ly(x = .c, y = .r, z = .m, type = "heatmap",
 		colors = .col,
