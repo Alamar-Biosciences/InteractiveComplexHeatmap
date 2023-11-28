@@ -1778,7 +1778,7 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 			    }
 
 				html = qq("
-<div style='display: inline-block; vertical-align: top; width: 45%; background-color: rgba(255, 255, 255, 0.5);'>
+<div style='display: inline-block; vertical-align: top; width: 45%;'>
 Details:
 <pre>
 Target:  @{row_label}
@@ -1801,7 +1801,7 @@ Value:   @{v_chr} <span style='background-color:@{col};width=10px;'> </span></pr
 
 				if(length(value_txt)) {
 					html = qq("@{html}
-<div style='display: inline-block; vertical-align: top; width: 45%; background-color: rgba(255, 255, 255, 0.5);'>
+<div style='display: inline-block; vertical-align: top; width: 45%;'>
 Covariates:
 <pre>
 @{paste(value_txt, collapse = '\n')}</pre></div>")
