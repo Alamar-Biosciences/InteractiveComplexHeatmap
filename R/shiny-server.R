@@ -1778,15 +1778,12 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 			    }
 
 				html = qq("
-<div>
-<p>Details:</p>
+<div style='display: inline-block; vertical-align: top; width: 45%; background-color: rgba(255, 255, 255, 0.5);'>
+Details:
 <pre>
 Target:  @{row_label}
 Sample:  @{column_label}
-Value:   @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
-<!--Gene Name:
-UniprotID:-->
-</pre>")
+Value:   @{v_chr} <span style='background-color:@{col};width=10px;'> </span></pre></div>")
 
 				value_txt = NULL
 				if(!is.null(ht@top_annotation)) {
@@ -1804,9 +1801,10 @@ UniprotID:-->
 
 				if(length(value_txt)) {
 					html = qq("@{html}
-<p>Information of the associated annotations:</p>
+<div style='display: inline-block; vertical-align: top; width: 45%; background-color: rgba(255, 255, 255, 0.5);'>
+Covariates:
 <pre>
-@{paste(value_txt, collapse = '\n')}</pre>")
+@{paste(value_txt, collapse = '\n')}</pre></div>")
 				}
 
 				html = paste0(html, "</div>")
@@ -2027,15 +2025,12 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 			# column_label = paste0("'", column_label, "'")
 		}
 		html = qq("
-<div>
-<p>Details:</p>
+<div style='display: inline-block; vertical-align: top; width: 45%;'>
+Details:
 <pre>
 Target:  @{row_label}
 Sample:  @{column_label}
-Value:   @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
-<!--Gene Name:
-UniprotID:-->
-</pre>")
+Value:   @{v_chr} <span style='background-color:@{col};width=10px;'></span></pre></div>")
 		value_txt = NULL
 		if(!is.null(ht@top_annotation)) {
 			value_txt = c(value_txt, get_anno_value(ht@top_annotation, column_index))
@@ -2051,7 +2046,8 @@ UniprotID:-->
 		}
 		if(length(value_txt)) {
 			html = qq("@{html}
-<p>Information of the associated annotations:</p>
+<div style='display: inline-block; vertical-align: top; width: 45%;'>
+Covariates:
 <pre>
 @{paste(value_txt, collapse = '\n')}</pre>")
 		}
