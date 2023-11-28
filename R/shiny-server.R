@@ -1981,11 +1981,82 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 	  if (!is.null(clickData)) {
 	    message("clickData: ", clickData[["x"]], " ", clickData[["y"]], " ", round(clickData[["z"]], 2))
 	    #shinyjs::showElement(id = qq("@{heatmap_id}_info"))
-	    HTML(
-	      paste("clickData:", clickData[["x"]], clickData[["y"]],
-	            "value:", round(clickData[["z"]], 2),
-	            sep = '<br/>')
-	    )
+
+		ht = ht_list()@ht_list[[1]]
+		m = ht@matrix
+		row_index = which(rownames(m) == clickData[["y"]])
+		column_index = which(colnames(m) == clickData[["x"]])
+		v = m[row_index, column_index]
+
+		v_chr = v
+		if(is.numeric(v)) {
+			if(abs(v) >= 1) {
+				if(abs(v) - abs(round(v)) == 0) {
+					v_chr = round(v)
+				} else {
+					v_chr = sprintf("%.2f", v)
+				}
+			} else {
+				v_chr = 0
+				for(i in 1:20) {
+					if(abs(v)* 10^i > 1) {
+						v_chr = round(v, digits = i+1)
+						break
+					}
+				}
+			}
+		}
+		if(identical(ht@matrix_param$gp$type, "none")){
+			col = "transparent"
+		} else if(is.null(ht@heatmap_param$oncoprint_env)) {
+			col = map_to_colors(ht@matrix_color_mapping, v)
+		} else {
+			col = "transparent"
+		}
+		if(is.na(v)) v = "NA"
+		row_label = rownames(m)[row_index]
+		column_label = colnames(m)[column_index]
+		if(is.null(row_label)) {
+			row_label = "NULL"
+		} else {
+			# row_label = paste0("'", row_label, "'")
+		}
+		if(is.null(column_label)) {
+			column_label = "NULL"
+		} else {
+			# column_label = paste0("'", column_label, "'")
+		}
+		html = qq("
+<div>
+<p>Details:</p>
+<pre>
+Target:  @{row_label}
+Sample:  @{column_label}
+Value:   @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
+<!--Gene Name:
+UniprotID:-->
+</pre>")
+		value_txt = NULL
+		if(!is.null(ht@top_annotation)) {
+			value_txt = c(value_txt, get_anno_value(ht@top_annotation, column_index))
+		}
+		if(!is.null(ht@bottom_annotation)) {
+			value_txt = c(value_txt, get_anno_value(ht@bottom_annotation, column_index))
+		}
+		if(!is.null(ht@left_annotation)) {
+			value_txt = c(value_txt, get_anno_value(ht@left_annotation, row_index))
+		}
+		if(!is.null(ht@right_annotation)) {
+			value_txt = c(value_txt, get_anno_value(ht@right_annotation, row_index))
+		}
+		if(length(value_txt)) {
+			html = qq("@{html}
+<p>Information of the associated annotations:</p>
+<pre>
+@{paste(value_txt, collapse = '\n')}</pre>")
+		}
+		html = paste0(html, "</div>")
+		HTML(html)
 	  } else {
 	    #shinyjs::hideElement(id = qq("@{heatmap_id}_info"))
 	    HTML("<p></p>")
@@ -2011,7 +2082,7 @@ make_plotly_sub_heatmap = function(input, output, session, heatmap_id, update_si
 		updateNumericInput(session, qq("@{heatmap_id}_sub_heatmap_input_height"), value = session$clientData[[qq("output_@{heatmap_id}_sub_heatmap_height")]])
 	}
 
-	.make_plotly_sub_heatmap(ht_list, selected)
+	.make_plotly_sub_heatmap(ht_list, selected, info = FALSE)
 }
 
 sub_ht_col_vals <- function(x) {
@@ -2049,7 +2120,7 @@ sub_ht_col_vals <- function(x) {
 	col_fun
 }
 
-.make_plotly_sub_heatmap <- function(ht_list, selected) {
+.make_plotly_sub_heatmap <- function(ht_list, selected, info = TRUE) {
 	.r <- rev(selected()@listData$row_label@unlistData) # target
 	.c <- selected()@listData$column_label@unlistData # sample
 	.m_full <- ht_list()@ht_list[[1]]@matrix
@@ -2059,8 +2130,12 @@ sub_ht_col_vals <- function(x) {
 	col_size <- ht_list()@ht_list[[1]]@column_names_param$gp$fontsize
 
 	.m <- .m_full[.r,.c] # value
-	.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
-	dim(.i) <- dim(.m)
+	if (info) {
+		.i <- paste0("Target: ", rep(.r, length(.c)), "\nSample: ", rep(.c, each=length(.r)), "\nValue: ", round(as.numeric(.m), 2))
+		dim(.i) <- dim(.m)
+	} else {
+		.i <- NA
+	}
 
 	# we provide the main heatmap to come up with the breaks
 	# sub_ht_col_vals returns a function that maps values according to the breaks used in the main heatmap
@@ -2080,13 +2155,7 @@ sub_ht_col_vals <- function(x) {
 			yaxis = list(tickfont = list(size = row_size), autotick = FALSE, side = "right"),
 			xaxis = list(tickfont = list(size = col_size), autotick = FALSE),
 			hoverlabel = list(align = "left", font = list(size = label_size)))
+	# if (!info)
+	# 	.p <- plotly::style(p, hoverinfo = "none", traces = 1)
 	.p
 }
-
-
-if (FALSE) {
-			output[[qq("@{heatmap_id}_sub_heatmap_control")]] = renderUI({
-				NULL
-			})
-}
-
