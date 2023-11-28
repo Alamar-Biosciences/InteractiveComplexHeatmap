@@ -2148,10 +2148,16 @@ sub_ht_col_vals <- function(x) {
 		hoverinfo = 'text', text = .i,
 		source = "plotly_subheatmap") |>
 		plotly::colorbar(thickness = 15, outlinewidth = 0, x = -0.5) |>
-		plotly::config(displayModeBar = FALSE) |>
+		plotly::config(displayModeBar = TRUE,
+                   displaylogo = FALSE,
+                   toImageButtonOptions=list(format="svg"),
+                   modeBarButtonsToRemove = c("hoverClosestCartesian", "hoverCompareCartesian",
+                                 "lasso2d", "select2d", "autoScale2d")) |>
 		plotly::layout(
+      margin = list(t=40),
 			paper_bgcolor = "rgba(0, 0, 0, 0)",
 			plot_bgcolor = "rgba(0, 0, 0, 0)",
+      modebar=list(bgcolor="transparent", color='gray', activecolor='gray'),
 			yaxis = list(tickfont = list(size = row_size), autotick = FALSE, side = "right"),
 			xaxis = list(tickfont = list(size = col_size), autotick = FALSE),
 			hoverlabel = list(align = "left", font = list(size = label_size)))
