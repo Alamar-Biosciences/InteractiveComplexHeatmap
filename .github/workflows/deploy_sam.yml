@@ -4,7 +4,10 @@ on:
 
   pull_request:
     types: closed
-    branches: 'master' # ['master', 'dev']
+    branches:
+      - 'master'
+      - 'RC*'
+      - '1.*'
     paths-ignore:
       - '.gitignore'
 
