@@ -10,6 +10,8 @@ on:
       - '1.*'
     paths-ignore:
       - '.gitignore'
+      - '*.yml'
+      - '*.md'
 
   workflow_dispatch:
 
